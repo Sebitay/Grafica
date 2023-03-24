@@ -9,9 +9,16 @@ BLACK =(0,0,0)
 WHITE = (255,255,255)
 
 window = pyglet.window.Window(WIDTH,HEIGHT)
-multi = 1.5
 
 nave = pyglet.graphics.Batch()
+star = pyglet.graphics.Batch()
+delete = pyglet.graphics.Batch()
+estrellas_info = np.zeros((20,4),dtype=int)
+estrellas_info[0]=np.array([1000,800,1,1])
+estrellas_info[1]=np.array([1000,400,1,1])
+print(estrellas_info[0])
+estrellas= list()
+
 
 class halcon():
     def __init__(self):
@@ -135,15 +142,35 @@ class y_wing():
         self.cohete18=shapes.Triangle(x=self.centro[0]+37,y=self.centro[1]-105,x2=self.centro[0]+42,y2=self.centro[1]-105,x3=self.centro[0]+42,y3=self.centro[1]-112,color= LIGHT_GRAY,batch=nave)
         self.cohete19=shapes.Rectangle(x=self.centro[0]+42,y=self.centro[1]-112,width=14,height= 7,color= LIGHT_GRAY,batch=nave)
 
-
-
-
+class estrella():
+    def __init__(self,pos_x,pos_y,distancia):
+        self.centro = (pos_x,pos_y)
+        self.distancia = distancia
+        self.batch = star
+        self.cuerpo0 = shapes.Line(x=self.centro[0]-10,y=self.centro[1],x2=self.centro[0]+10,y2=self.centro[1],width = 2,color = WHITE,batch = self.batch)
+        self.cuerpo1 = shapes.Line(x=self.centro[0],y=self.centro[1]-10,x2=self.centro[0],y2=self.centro[1]+10,width = 2,color = WHITE,batch = self.batch)
+        self.cuerpo2 = shapes.Line(x=self.centro[0]-6,y=self.centro[1]+6,x2=self.centro[0]+6,y2=self.centro[1]-6,width = 2,color = WHITE,batch = self.batch)
+        self.cuerpo3 = shapes.Line(x=self.centro[0]+6,y=self.centro[1]+6,x2=self.centro[0]-6,y2=self.centro[1]-6,width = 2,color = WHITE,batch = self.batch)
 
 
 Halcon = halcon()
 Wing1 = x_wing((WIDTH//2-150,HEIGHT//2-250))
 Wing2 = y_wing((WIDTH//2+150,HEIGHT//2-260))
+i=0
+for info in estrellas_info:
+    if info[3]!=0:
+        estrellas.append(estrella(info[0],info[1],info[2]))
+
+for item in estrellas:
+    if item.centro[1] < 800:
+        item.batch = delete
+        estrellas.remove(item)
+
+print(estrellas)
+
 @window.event
 def on_draw():
+    window.clear()
+    star.draw()
     nave.draw()
 pyglet.app.run()
