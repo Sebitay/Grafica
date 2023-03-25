@@ -8,7 +8,7 @@ WIDTH, HEIGHT = 1200, 1000
 DARK_GRAY = (100,100,100)
 LIGHT_GRAY = (175,175,175)
 BLACK =(0,0,0)
-WHITE = (255,255,155)
+AMARILLO = (255,255,155)
 
 window = pyglet.window.Window(WIDTH,HEIGHT)
 n_estrellas = 80
@@ -23,16 +23,16 @@ i=0
 while i < n_estrellas:
     if i<n_estrellas//4:
         y1=0
-        y2=250
+        y2=HEIGHT//4
     elif i<n_estrellas//2:
-        y1=250
-        y2=500
+        y1=HEIGHT//4
+        y2=HEIGHT//2
     elif i<3*n_estrellas//4:
-        y1=500
-        y2=750
+        y1=HEIGHT//2
+        y2=3*HEIGHT//4
     else:
-        y1=750
-        y2=1000
+        y1=3*HEIGHT//4
+        y2=HEIGHT
     estrellas_i[i] = np.array([np.random.randint(10,1190),np.random.randint(y1,y2),np.random.randint(1,4)])
     i+=1
 
@@ -183,7 +183,7 @@ class estrella():
         self.posx = pos_x
         self.posy = pos_y
         self.distancia = distancia
-        color = WHITE
+        color = AMARILLO
         self.width = 2
         self.speed = 1.44
         if distancia >=2:
