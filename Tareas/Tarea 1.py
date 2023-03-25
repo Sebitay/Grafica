@@ -2,6 +2,7 @@ from pyglet import shapes
 import pyglet
 import numpy as np
 
+# DATOS INICIALES
 WIDTH, HEIGHT = 1200, 1000
 DARK_GRAY = (100,100,100)
 LIGHT_GRAY = (175,175,175)
@@ -9,17 +10,32 @@ BLACK =(0,0,0)
 WHITE = (255,255,255)
 
 window = pyglet.window.Window(WIDTH,HEIGHT)
-
+n_estrellas = 80
 nave = pyglet.graphics.Batch()
 star = pyglet.graphics.Batch()
-delete = pyglet.graphics.Batch()
-estrellas_info = np.zeros((20,4),dtype=int)
-estrellas_info[0]=np.array([1000,800,1,1])
-estrellas_info[1]=np.array([1000,400,1,1])
-print(estrellas_info[0])
+
+# CREACION DE ESTRELLAS INICIALES DE FORMA HOMOGENEA
+estrellas_i = np.zeros((n_estrellas,4),dtype=int)
 estrellas= list()
+i=0
+while i < n_estrellas:
+    if i<n_estrellas//4:
+        y1=0
+        y2=250
+    elif i<n_estrellas//2:
+        y1=250
+        y2=500
+    elif i<3*n_estrellas//4:
+        y1=500
+        y2=750
+    else:
+        y1=750
+        y2=1000
+    estrellas_i[i] = np.array([np.random.randint(10,1190),np.random.randint(y1,y2),np.random.randint(1,4),1])
+    i+=1
 
 
+# OBJETOS USADOS (naves y estrellas)
 class halcon():
     def __init__(self):
         self.punta_nave = pyglet.shapes.Star(x=WIDTH//2-7, y=HEIGHT//2-75,outer_radius=53,inner_radius=27, num_spikes=3,rotation=-100, color=DARK_GRAY,batch=nave)
@@ -144,33 +160,54 @@ class y_wing():
 
 class estrella():
     def __init__(self,pos_x,pos_y,distancia):
-        self.centro = (pos_x,pos_y)
+        self.posx = pos_x
+        self.posy = pos_y
         self.distancia = distancia
-        self.batch = star
-        self.cuerpo0 = shapes.Line(x=self.centro[0]-10,y=self.centro[1],x2=self.centro[0]+10,y2=self.centro[1],width = 2,color = WHITE,batch = self.batch)
-        self.cuerpo1 = shapes.Line(x=self.centro[0],y=self.centro[1]-10,x2=self.centro[0],y2=self.centro[1]+10,width = 2,color = WHITE,batch = self.batch)
-        self.cuerpo2 = shapes.Line(x=self.centro[0]-6,y=self.centro[1]+6,x2=self.centro[0]+6,y2=self.centro[1]-6,width = 2,color = WHITE,batch = self.batch)
-        self.cuerpo3 = shapes.Line(x=self.centro[0]+6,y=self.centro[1]+6,x2=self.centro[0]-6,y2=self.centro[1]-6,width = 2,color = WHITE,batch = self.batch)
+        color = WHITE
+        self.width = 2
+        self.speed = 1.44
+        if distancia >=2:
+            color = (200,200,200)
+            self.speed = 1.2
+            self.width = 1
+        self.cuerpo0 = shapes.Line(x=pos_x-10/distancia,y=pos_y,x2=pos_x+10/distancia,y2=pos_y,width = self.width,color = color,batch = star)
+        self.cuerpo1 = shapes.Line(x=pos_x,y=pos_y-10/distancia,x2=pos_x,y2=pos_y+10/distancia,width = self.width,color = color,batch = star)
+        self.cuerpo2 = shapes.Line(x=pos_x-6/distancia,y=pos_y+6/distancia,x2=pos_x+6/distancia,y2=pos_y-6/distancia,width = self.width,color = color,batch = star)
+        self.cuerpo3 = shapes.Line(x=pos_x+6/distancia,y=pos_y+6/distancia,x2=pos_x-6/distancia,y2=pos_y-6/distancia,width = self.width,color = color,batch = star)
+
+    def update(self):
+        self.posy -=self.speed
+        self.cuerpo0.y -= self.speed
+        self.cuerpo1.y -= self.speed
+        self.cuerpo2.y -= self.speed
+        self.cuerpo2.y2 -= self.speed
+        self.cuerpo3.y -= self.speed
+        self.cuerpo3.y2 -= self.speed
+        pass
 
 
+# LLAMADO DE OBJETOS
 Halcon = halcon()
 Wing1 = x_wing((WIDTH//2-150,HEIGHT//2-250))
 Wing2 = y_wing((WIDTH//2+150,HEIGHT//2-260))
-i=0
-for info in estrellas_info:
+
+for info in estrellas_i:
     if info[3]!=0:
         estrellas.append(estrella(info[0],info[1],info[2]))
 
-for item in estrellas:
-    if item.centro[1] < 800:
-        item.batch = delete
-        estrellas.remove(item)
 
-print(estrellas)
-
+# DIBUJAR OBJETOS
 @window.event
 def on_draw():
     window.clear()
+    # ELIMINACION DE ESTRELLAS Y CREACION DE UNA NUEVA
+    for item in estrellas:
+        if item.cuerpo0.y < -10:
+            estrellas.remove(item)
+            estrellas.append(estrella(np.random.randint(10,1190),1010,np.random.randint(1,3)))
+    # MOVER ESTRELLAS
+    for item in estrellas:
+        item.update()
     star.draw()
     nave.draw()
 pyglet.app.run()
