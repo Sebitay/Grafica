@@ -2,20 +2,22 @@ from pyglet import shapes
 import pyglet
 import numpy as np
 
+
 # DATOS INICIALES
 WIDTH, HEIGHT = 1200, 1000
 DARK_GRAY = (100,100,100)
 LIGHT_GRAY = (175,175,175)
 BLACK =(0,0,0)
-WHITE = (255,255,255)
+WHITE = (255,255,155)
 
 window = pyglet.window.Window(WIDTH,HEIGHT)
 n_estrellas = 80
 nave = pyglet.graphics.Batch()
 star = pyglet.graphics.Batch()
 
+
 # CREACION DE ESTRELLAS INICIALES DE FORMA HOMOGENEA
-estrellas_i = np.zeros((n_estrellas,4),dtype=int)
+estrellas_i = np.zeros((n_estrellas,3),dtype=int)
 estrellas= list()
 i=0
 while i < n_estrellas:
@@ -31,17 +33,20 @@ while i < n_estrellas:
     else:
         y1=750
         y2=1000
-    estrellas_i[i] = np.array([np.random.randint(10,1190),np.random.randint(y1,y2),np.random.randint(1,4),1])
+    estrellas_i[i] = np.array([np.random.randint(10,1190),np.random.randint(y1,y2),np.random.randint(1,4)])
     i+=1
 
 
 # OBJETOS USADOS (naves y estrellas)
 class halcon():
     def __init__(self):
-        self.punta_nave = pyglet.shapes.Star(x=WIDTH//2-7, y=HEIGHT//2-75,outer_radius=53,inner_radius=27, num_spikes=3,rotation=-100, color=DARK_GRAY,batch=nave)
-        self.punta_nave2 = pyglet.shapes.Star(x=WIDTH//2+7, y=HEIGHT//2-75,outer_radius=53,inner_radius=27, num_spikes=3,rotation=-80, color=DARK_GRAY,batch=nave)
-        self.punta_nave3 = pyglet.shapes.Rectangle(x=WIDTH//2-16,y=HEIGHT//2-97, width = 32, height = 75, color = DARK_GRAY,batch=nave)
-        self.negativo_punta = pyglet.shapes.Rectangle(x=WIDTH//2-9,y=HEIGHT//2-97, width = 18, height = 75, color = BLACK,batch=nave)
+        self.propulsor0 = pyglet.shapes.Arc(x=WIDTH//2,y=HEIGHT//2-150, radius = 67, angle = 1.58, start_angle=3.93,color=(0,255,255),batch=nave,)
+        self.propulsor1 = pyglet.shapes.Arc(x=WIDTH//2,y=HEIGHT//2-150, radius = 68, angle = 1.58, start_angle=3.93,color=(0,255,255),batch=nave)
+        self.propulsor2 = pyglet.shapes.Arc(x=WIDTH//2,y=HEIGHT//2-150, radius = 69, angle = 1.58, start_angle=3.93,color=(0,255,255),batch=nave)
+        self.punta_nave0 = pyglet.shapes.Triangle(x=WIDTH//2-45,y=WIDTH//2-200,x2=WIDTH//2-16,y2=WIDTH//2-200,x3=WIDTH//2-16,y3=WIDTH//2-122,color = DARK_GRAY,batch= nave)
+        self.punta_nave1 = pyglet.shapes.Triangle(x=WIDTH//2+45,y=WIDTH//2-200,x2=WIDTH//2+16,y2=WIDTH//2-200,x3=WIDTH//2+16,y3=WIDTH//2-122,color = DARK_GRAY,batch= nave)
+        self.punta_nave3 = pyglet.shapes.Rectangle(x=WIDTH//2-16,y=HEIGHT//2-97, width = 6, height = 75, color = DARK_GRAY,batch=nave)
+        self.punta_nave4 = pyglet.shapes.Rectangle(x=WIDTH//2+10,y=HEIGHT//2-97, width = 6, height = 75, color = DARK_GRAY,batch=nave)
         self.cuerpo_nave = pyglet.shapes.Circle(x=WIDTH//2,y=HEIGHT//2-150, radius = 67, color = LIGHT_GRAY, batch = nave)
         self.cuerpo_nave3 = pyglet.shapes.Rectangle(x=WIDTH//2-10,y=HEIGHT//2-151, width = 20, height = 82, color = DARK_GRAY,batch=nave)
         self.cuerpo_nave2 = pyglet.shapes.Rectangle(x=WIDTH//2-9,y=HEIGHT//2-150, width = 18, height = 80, color = LIGHT_GRAY,batch=nave)
@@ -75,15 +80,18 @@ class halcon():
         self.capsula_nave4.anchor_x = 10
         self.capsula_nave4.rotation = -20
 
+    def update(self,n):
+        self.propulsor2.angle += n*1.58
+
 class x_wing():
     def __init__(self,pos):
         self.centro = (pos[0],pos[1])
-        self.cuerpo1= pyglet.shapes.Triangle(x=self.centro[0]-11,y=self.centro[1]-50,x2=self.centro[0]-5,y2=self.centro[1]+50,x3=self.centro[0]-5,y3=self.centro[1]-50,color = LIGHT_GRAY, batch=nave)
-        self.cuerpo2= pyglet.shapes.Triangle(x=self.centro[0]+11,y=self.centro[1]-50,x2=self.centro[0]+5,y2=self.centro[1]+50,x3=self.centro[0]+5,y3=self.centro[1]-50,color = LIGHT_GRAY, batch=nave)
-        self.cuerpo3= pyglet.shapes.Rectangle(x=self.centro[0]-5,y=self.centro[1]-50,width = 10, height=100,color=LIGHT_GRAY,batch=nave)    
-        self.punta1= pyglet.shapes.Triangle(x=self.centro[0]-6,y=self.centro[1]+49,x2=self.centro[0]-3,y2=self.centro[1]+70,x3=self.centro[0]-3,y3=self.centro[1]+49,color = DARK_GRAY,batch=nave)
-        self.punta2= pyglet.shapes.Triangle(x=self.centro[0]+6,y=self.centro[1]+49,x2=self.centro[0]+3,y2=self.centro[1]+70,x3=self.centro[0]+3,y3=self.centro[1]+49,color = DARK_GRAY,batch=nave)   
-        self.punta3= pyglet.shapes.Rectangle(x=self.centro[0]-3,y=self.centro[1]+49,width = 6, height=20,color=DARK_GRAY,batch=nave)
+        self.cuerpo1= pyglet.shapes.Triangle(x=self.centro[0]-11,y=self.centro[1]-50,x2=self.centro[0]-5,y2=self.centro[1]+40,x3=self.centro[0]-5,y3=self.centro[1]-50,color = LIGHT_GRAY, batch=nave)
+        self.cuerpo2= pyglet.shapes.Triangle(x=self.centro[0]+11,y=self.centro[1]-50,x2=self.centro[0]+5,y2=self.centro[1]+40,x3=self.centro[0]+5,y3=self.centro[1]-50,color = LIGHT_GRAY, batch=nave)
+        self.cuerpo3= pyglet.shapes.Rectangle(x=self.centro[0]-5,y=self.centro[1]-50,width = 10, height=90,color=LIGHT_GRAY,batch=nave)    
+        self.punta1= pyglet.shapes.Triangle(x=self.centro[0]-6,y=self.centro[1]+39,x2=self.centro[0]-3,y2=self.centro[1]+60,x3=self.centro[0]-3,y3=self.centro[1]+39,color = DARK_GRAY,batch=nave)
+        self.punta2= pyglet.shapes.Triangle(x=self.centro[0]+6,y=self.centro[1]+39,x2=self.centro[0]+3,y2=self.centro[1]+60,x3=self.centro[0]+3,y3=self.centro[1]+39,color = DARK_GRAY,batch=nave)   
+        self.punta3= pyglet.shapes.Rectangle(x=self.centro[0]-3,y=self.centro[1]+39,width = 6, height=20,color=DARK_GRAY,batch=nave)
         self.alas1= pyglet.shapes.Rectangle(x=self.centro[0]-61,y=self.centro[1]-73,width=122,height=23,color=LIGHT_GRAY,batch=nave)
         self.alas2= pyglet.shapes.Triangle(x=self.centro[0]-61,y=self.centro[1]-73,x2=self.centro[0]-11,y2=self.centro[1]-73,x3=self.centro[0]-11,y3=self.centro[1]-83,color=LIGHT_GRAY,batch=nave)
         self.alas3= pyglet.shapes.Triangle(x=self.centro[0]+61,y=self.centro[1]-73,x2=self.centro[0]+11,y2=self.centro[1]-73,x3=self.centro[0]+11,y3=self.centro[1]-83,color=LIGHT_GRAY,batch=nave)
@@ -99,12 +107,14 @@ class x_wing():
         self.canon6= pyglet.shapes.Triangle(x=self.centro[0]-63,y=self.centro[1],x2=self.centro[0]-58,y2=self.centro[1]+3,x3=self.centro[0]-63,y3=self.centro[1]+3,color=DARK_GRAY,batch=nave)
         self.canon7= pyglet.shapes.Triangle(x=self.centro[0]+65,y=self.centro[1],x2=self.centro[0]+70,y2=self.centro[1]+3,x3=self.centro[0]+65,y3=self.centro[1]+3,color=DARK_GRAY,batch=nave)
         self.canon8= pyglet.shapes.Triangle(x=self.centro[0]+63,y=self.centro[1],x2=self.centro[0]+58,y2=self.centro[1]+3,x3=self.centro[0]+63,y3=self.centro[1]+3,color=DARK_GRAY,batch=nave)
+        self.cohete7= pyglet.shapes.Rectangle(x=self.centro[0]-23,y=self.centro[1]-93,width=7,height=2,color=(0,255,255),batch=nave)
         self.cohete1= pyglet.shapes.Rectangle(x=self.centro[0]-26,y=self.centro[1]-69,width=13,height=24,color=DARK_GRAY,batch=nave)
         self.cohete3= pyglet.shapes.Rectangle(x=self.centro[0]-23,y=self.centro[1]-91,width=7,height=24,color=DARK_GRAY,batch=nave)
         self.cohete2= pyglet.shapes.Rectangle(x=self.centro[0]-25,y=self.centro[1]-68,width=11,height=15,color=(145,145,145),batch=nave)
         self.cohete4= pyglet.shapes.Rectangle(x=self.centro[0]-22,y=self.centro[1]-86,width=5,height=18,color=(145,145,145),batch=nave)
         self.cohete5= pyglet.shapes.Triangle(x=self.centro[0]-23,y=self.centro[1]-91,x2=self.centro[0]-23,y2=self.centro[1]-87,x3=self.centro[0]-25,y3=self.centro[1]-87,color=DARK_GRAY,batch=nave)
         self.cohete6= pyglet.shapes.Triangle(x=self.centro[0]-16,y=self.centro[1]-91,x2=self.centro[0]-16,y2=self.centro[1]-87,x3=self.centro[0]-14,y3=self.centro[1]-87,color=DARK_GRAY,batch=nave)
+        self.cohete71= pyglet.shapes.Rectangle(x=self.centro[0]+16,y=self.centro[1]-93,width=7,height=2,color=(0,255,255),batch=nave)
         self.cohete11= pyglet.shapes.Rectangle(x=self.centro[0]+13,y=self.centro[1]-69,width=13,height=24,color=DARK_GRAY,batch=nave)
         self.cohete31= pyglet.shapes.Rectangle(x=self.centro[0]+16,y=self.centro[1]-91,width=7,height=24,color=DARK_GRAY,batch=nave)
         self.cohete21= pyglet.shapes.Rectangle(x=self.centro[0]+14,y=self.centro[1]-68,width=11,height=15,color=(145,145,145),batch=nave)
@@ -116,6 +126,10 @@ class x_wing():
         self.cabina3= pyglet.shapes.Triangle(x=self.centro[0]+5,y=self.centro[1]-48,x2=self.centro[0]+5,y2=self.centro[1]-8,x3=self.centro[0]+9,y3=self.centro[1]-48,color=BLACK,batch=nave)
         self.detalle1=pyglet.shapes.Rectangle(x=self.centro[0]-8,y=self.centro[1]-82,width=16,height=32,color=(130,130,130),batch=nave)
         self.detalle2=pyglet.shapes.Circle(x=self.centro[0],y=self.centro[1]-60,radius = 5,color=DARK_GRAY,batch=nave)
+    
+    def update(self,n):
+        self.cohete7.y -= n
+        self.cohete71.y -= n
 
 class y_wing():
     def __init__(self,pos):
@@ -137,6 +151,7 @@ class y_wing():
         self.cabina12=shapes.Rectangle(x=self.centro[0]-5,y=self.centro[1]+60,width=10,height=10,color=BLACK,batch=nave)
         self.cabina13=shapes.Rectangle(x=self.centro[0]-8,y=self.centro[1]+42,width=2,height=17,color= BLACK,batch=nave)
         self.cabina14=shapes.Rectangle(x=self.centro[0]+6,y=self.centro[1]+42,width=2,height=17,color= BLACK,batch=nave)
+        self.coheteAni=shapes.Rectangle(x=self.centro[0]-54,y=self.centro[1]-71,width=10,height=2,color=(0,255,255),batch=nave)
         self.cohete0=shapes.Rectangle(x=self.centro[0]-60, y=self.centro[1]-50,width=22,height=49,color=LIGHT_GRAY,batch=nave)
         self.cohete1=shapes.Circle(x=self.centro[0]-49,y=self.centro[1]-1,radius=11,color=LIGHT_GRAY,batch=nave)
         self.cohete2=shapes.Triangle(x=self.centro[0]-58, y=self.centro[1]-50,x2=self.centro[0]-54,y2=self.centro[1]-50,x3=self.centro[0]-54,y3=self.centro[1]-69,color=DARK_GRAY,batch=nave)
@@ -147,6 +162,7 @@ class y_wing():
         self.cohete7=shapes.Triangle(x=self.centro[0]-61,y=self.centro[1]-105,x2=self.centro[0]-56,y2=self.centro[1]-105,x3=self.centro[0]-56,y3=self.centro[1]-112,color= LIGHT_GRAY,batch=nave)
         self.cohete8=shapes.Triangle(x=self.centro[0]-37,y=self.centro[1]-105,x2=self.centro[0]-42,y2=self.centro[1]-105,x3=self.centro[0]-42,y3=self.centro[1]-112,color= LIGHT_GRAY,batch=nave)
         self.cohete9=shapes.Rectangle(x=self.centro[0]-56,y=self.centro[1]-112,width=14,height= 7,color= LIGHT_GRAY,batch=nave)
+        self.coheteAni2=shapes.Rectangle(x=self.centro[0]+44,y=self.centro[1]-71,width=10,height=2,color=(0,255,255),batch=nave)
         self.cohete10=shapes.Rectangle(x=self.centro[0]+38, y=self.centro[1]-50,width=22,height=49,color=LIGHT_GRAY,batch=nave)
         self.cohete11=shapes.Circle(x=self.centro[0]+49,y=self.centro[1]-1,radius=11,color=LIGHT_GRAY,batch=nave)
         self.cohete12=shapes.Triangle(x=self.centro[0]+58, y=self.centro[1]-50,x2=self.centro[0]+54,y2=self.centro[1]-50,x3=self.centro[0]+54,y3=self.centro[1]-69,color=DARK_GRAY,batch=nave)
@@ -158,6 +174,10 @@ class y_wing():
         self.cohete18=shapes.Triangle(x=self.centro[0]+37,y=self.centro[1]-105,x2=self.centro[0]+42,y2=self.centro[1]-105,x3=self.centro[0]+42,y3=self.centro[1]-112,color= LIGHT_GRAY,batch=nave)
         self.cohete19=shapes.Rectangle(x=self.centro[0]+42,y=self.centro[1]-112,width=14,height= 7,color= LIGHT_GRAY,batch=nave)
 
+    def update(self,n):
+        self.coheteAni.y -=n
+        self.coheteAni2.y -=n
+
 class estrella():
     def __init__(self,pos_x,pos_y,distancia):
         self.posx = pos_x
@@ -167,7 +187,7 @@ class estrella():
         self.width = 2
         self.speed = 1.44
         if distancia >=2:
-            color = (200,200,200)
+            color = (250,250,200)
             self.speed = 1.2
             self.width = 1
         self.cuerpo0 = shapes.Line(x=pos_x-10/distancia,y=pos_y,x2=pos_x+10/distancia,y2=pos_y,width = self.width,color = color,batch = star)
@@ -187,19 +207,35 @@ class estrella():
 
 
 # LLAMADO DE OBJETOS
-Halcon = halcon()
+Lider = halcon()
 Wing1 = x_wing((WIDTH//2-150,HEIGHT//2-250))
 Wing2 = y_wing((WIDTH//2+150,HEIGHT//2-260))
 
 for info in estrellas_i:
-    if info[3]!=0:
+    if info[2]!=0:
         estrellas.append(estrella(info[0],info[1],info[2]))
 
-
+i=0
+n=1
 # DIBUJAR OBJETOS
 @window.event
 def on_draw():
+    global i 
+    global n
     window.clear()
+    # ANIMACION NAVES
+    if i==10:
+        i=0
+        if n == 1:
+            n = -1
+            Wing1.update(n)
+            Wing2.update(n)
+            Lider.update(n)
+        else:
+            n=1
+            Wing1.update(n)
+            Wing2.update(n)
+            Lider.update(n)
     # ELIMINACION DE ESTRELLAS Y CREACION DE UNA NUEVA
     for item in estrellas:
         if item.cuerpo0.y < -10:
@@ -210,4 +246,5 @@ def on_draw():
         item.update()
     star.draw()
     nave.draw()
+    i+=1
 pyglet.app.run()
