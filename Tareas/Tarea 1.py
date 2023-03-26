@@ -4,16 +4,18 @@ import numpy as np
 
 
 # DATOS INICIALES
-WIDTH, HEIGHT = 1200, 1000
+WIDTH, HEIGHT = 1500 , 844
 DARK_GRAY = (100,100,100)
 LIGHT_GRAY = (175,175,175)
 BLACK =(0,0,0)
 AMARILLO = (255,255,155)
 
+
 window = pyglet.window.Window(WIDTH,HEIGHT)
-n_estrellas = 80
+n_estrellas = WIDTH*HEIGHT//15000
 nave = pyglet.graphics.Batch()
 star = pyglet.graphics.Batch()
+fullscreen = False
 
 
 # CREACION DE ESTRELLAS INICIALES DE FORMA HOMOGENEA
@@ -33,48 +35,49 @@ while i < n_estrellas:
     else:
         y1=3*HEIGHT//4
         y2=HEIGHT
-    estrellas_i[i] = np.array([np.random.randint(10,1190),np.random.randint(y1,y2),np.random.randint(1,4)])
+    estrellas_i[i] = np.array([np.random.randint(10,WIDTH-10),np.random.randint(y1,y2),np.random.randint(1,3)])
     i+=1
 
 
 # OBJETOS USADOS (naves y estrellas)
 class halcon():
-    def __init__(self):
-        self.propulsor0 = pyglet.shapes.Arc(x=WIDTH//2,y=HEIGHT//2-150, radius = 67, angle = 1.58, start_angle=3.93,color=(0,255,255),batch=nave,)
-        self.propulsor1 = pyglet.shapes.Arc(x=WIDTH//2,y=HEIGHT//2-150, radius = 68, angle = 1.58, start_angle=3.93,color=(0,255,255),batch=nave)
-        self.propulsor2 = pyglet.shapes.Arc(x=WIDTH//2,y=HEIGHT//2-150, radius = 69, angle = 1.58, start_angle=3.93,color=(0,255,255),batch=nave)
-        self.punta_nave0 = pyglet.shapes.Triangle(x=WIDTH//2-45,y=WIDTH//2-200,x2=WIDTH//2-16,y2=WIDTH//2-200,x3=WIDTH//2-16,y3=WIDTH//2-122,color = DARK_GRAY,batch= nave)
-        self.punta_nave1 = pyglet.shapes.Triangle(x=WIDTH//2+45,y=WIDTH//2-200,x2=WIDTH//2+16,y2=WIDTH//2-200,x3=WIDTH//2+16,y3=WIDTH//2-122,color = DARK_GRAY,batch= nave)
-        self.punta_nave3 = pyglet.shapes.Rectangle(x=WIDTH//2-16,y=HEIGHT//2-97, width = 6, height = 75, color = DARK_GRAY,batch=nave)
-        self.punta_nave4 = pyglet.shapes.Rectangle(x=WIDTH//2+10,y=HEIGHT//2-97, width = 6, height = 75, color = DARK_GRAY,batch=nave)
-        self.cuerpo_nave = pyglet.shapes.Circle(x=WIDTH//2,y=HEIGHT//2-150, radius = 67, color = LIGHT_GRAY, batch = nave)
-        self.cuerpo_nave3 = pyglet.shapes.Rectangle(x=WIDTH//2-10,y=HEIGHT//2-151, width = 20, height = 82, color = DARK_GRAY,batch=nave)
-        self.cuerpo_nave2 = pyglet.shapes.Rectangle(x=WIDTH//2-9,y=HEIGHT//2-150, width = 18, height = 80, color = LIGHT_GRAY,batch=nave)
-        self.capsula_nave1 = pyglet.shapes.Rectangle(x=WIDTH//2+5,y=HEIGHT//2-160, width = 80, height = 22, color = DARK_GRAY,batch=nave)
-        self.capsula_nave2 = pyglet.shapes.Rectangle(x=WIDTH//2+47,y=HEIGHT//2-111, width = 22, height = 22, color = DARK_GRAY,batch=nave)
-        self.capsula_nave3 = pyglet.shapes.Rectangle(x=WIDTH//2+47,y=HEIGHT//2-89, width = 10, height = 15, color = DARK_GRAY,batch=nave)
-        self.capsula_nave4 = pyglet.shapes.Rectangle(x=WIDTH//2+69,y=HEIGHT//2-89, width = 10, height = 15, color = DARK_GRAY,batch=nave)
-        self.capsula_nave5 = pyglet.shapes.Rectangle(x=WIDTH//2+54,y=HEIGHT//2-90, width = 10, height = 15, color = DARK_GRAY,batch=nave)
-        self.capsula_nave11 = pyglet.shapes.Rectangle(x=WIDTH//2+6,y=HEIGHT//2-158, width = 78, height = 20, color = LIGHT_GRAY,batch=nave)
-        self.capsula_nave21 = pyglet.shapes.Rectangle(x=WIDTH//2+48,y=HEIGHT//2-110, width = 20, height = 20, color = LIGHT_GRAY,batch=nave)
-        self.capsula_nave6 = pyglet.shapes.Line(x=WIDTH//2+49,y=HEIGHT//2-89,x2 = WIDTH//2+54,y2=HEIGHT//2-76, width = 1, color = LIGHT_GRAY, batch=nave)
-        self.capsula_nave7 = pyglet.shapes.Line(x=WIDTH//2+54,y=HEIGHT//2-76, x2=WIDTH//2+62,y2=HEIGHT//2-76, width = 1, color = LIGHT_GRAY, batch=nave)
-        self.capsula_nave8 = pyglet.shapes.Line(x=WIDTH//2+62,y=HEIGHT//2-76, x2=WIDTH//2+67,y2=HEIGHT//2-89, width = 1, color = LIGHT_GRAY, batch=nave)
-        self.capsula_nave9 = pyglet.shapes.Line(x=WIDTH//2+49,y=HEIGHT//2-88,x2 = WIDTH//2+67,y2=HEIGHT//2-88, width = 1, color = LIGHT_GRAY, batch=nave)
-        self.capsula_nave10 = pyglet.shapes.Line(x=WIDTH//2+55,y=HEIGHT//2-88,x2 = WIDTH//2+55,y2=HEIGHT//2-76, width = 1, color = LIGHT_GRAY, batch=nave)
-        self.capsula_nave12 = pyglet.shapes.Line(x=WIDTH//2+62,y=HEIGHT//2-88,x2 = WIDTH//2+62,y2=HEIGHT//2-76, width = 1, color = LIGHT_GRAY, batch=nave)
-        self.cuerpo_nave6 = pyglet.shapes.Line(x=WIDTH//2,y=HEIGHT//2-150,x2=WIDTH//2-47,y2=HEIGHT//2-197,width=2,color=DARK_GRAY,batch=nave)
-        self.cuerpo_nave7 = pyglet.shapes.Line(x=WIDTH//2,y=HEIGHT//2-150,x2=WIDTH//2+48,y2=HEIGHT//2-198,width=2,color=DARK_GRAY,batch=nave)
-        self.cuerpo_nave4 = pyglet.shapes.Circle(x=WIDTH//2,y=HEIGHT//2-150, radius = 18, color = DARK_GRAY, batch = nave)
-        self.cuerpo_nave5 = pyglet.shapes.Circle(x=WIDTH//2,y=HEIGHT//2-150, radius = 16, color = LIGHT_GRAY, batch = nave)
-        self.detalle_nave1 = pyglet.shapes.Circle(x=WIDTH//2-14,y=HEIGHT//2-177, radius = 5, color = DARK_GRAY, batch = nave)
-        self.detalle_nave2 = pyglet.shapes.Circle(x=WIDTH//2,y=HEIGHT//2-179, radius = 5, color = DARK_GRAY, batch = nave)
-        self.detalle_nave3 = pyglet.shapes.Circle(x=WIDTH//2+13,y=HEIGHT//2-177, radius = 5, color = DARK_GRAY, batch = nave)
-        self.detalle_nave4 = pyglet.shapes.Circle(x=WIDTH//2-20,y=HEIGHT//2-190, radius = 5, color = DARK_GRAY, batch = nave)
-        self.detalle_nave5 = pyglet.shapes.Circle(x=WIDTH//2,y=HEIGHT//2-193, radius = 5, color = DARK_GRAY, batch = nave)
-        self.detalle_nave6 = pyglet.shapes.Circle(x=WIDTH//2+19,y=HEIGHT//2-190, radius = 5, color = DARK_GRAY, batch = nave)
-        self.detalle_nave7 = pyglet.shapes.Triangle(x=WIDTH//2-30,y=HEIGHT//2-130,x2=WIDTH//2-26,y2=HEIGHT//2-115,x3=WIDTH//2-47,y3=HEIGHT//2-130, color = DARK_GRAY, batch = nave)
-        self.detalle_nave8 = pyglet.shapes.Line(x=WIDTH//2-32,y=HEIGHT//2-128,x2=WIDTH//2-40,y2=HEIGHT//2-117,width=2, color = DARK_GRAY, batch = nave)
+    def __init__(self,pos):
+        self.centro = pos
+        self.propulsor0 = pyglet.shapes.Arc(x=self.centro[0],y=self.centro[1], radius = 67, angle = 1.58, start_angle=3.93,color=(0,255,255),batch=nave,)
+        self.propulsor1 = pyglet.shapes.Arc(x=self.centro[0],y=self.centro[1], radius = 68, angle = 1.58, start_angle=3.93,color=(0,255,255),batch=nave)
+        self.propulsor2 = pyglet.shapes.Arc(x=self.centro[0],y=self.centro[1], radius = 69, angle = 1.58, start_angle=3.93,color=(0,255,255),batch=nave)
+        self.punta_nave0 = pyglet.shapes.Triangle(x=self.centro[0]-45,y=self.centro[1]+50,x2=self.centro[0]-16,y2=self.centro[1]+50,x3=self.centro[0]-16,y3=self.centro[1]+128,color = DARK_GRAY,batch= nave)
+        self.punta_nave1 = pyglet.shapes.Triangle(x=self.centro[0]+45,y=self.centro[1]+50,x2=self.centro[0]+16,y2=self.centro[1]+50,x3=self.centro[0]+16,y3=self.centro[1]+128,color = DARK_GRAY,batch= nave)
+        self.punta_nave3 = pyglet.shapes.Rectangle(x=self.centro[0]-16,y=self.centro[1]+53, width = 6, height = 75, color = DARK_GRAY,batch=nave)
+        self.punta_nave4 = pyglet.shapes.Rectangle(x=self.centro[0]+10,y=self.centro[1]+53, width = 6, height = 75, color = DARK_GRAY,batch=nave)
+        self.cuerpo_nave = pyglet.shapes.Circle(x=self.centro[0],y=self.centro[1], radius = 67, color = LIGHT_GRAY, batch = nave)
+        self.cuerpo_nave3 = pyglet.shapes.Rectangle(x=self.centro[0]-10,y=self.centro[1]-1, width = 20, height = 82, color = DARK_GRAY,batch=nave)
+        self.cuerpo_nave2 = pyglet.shapes.Rectangle(x=self.centro[0]-9,y=self.centro[1], width = 18, height = 80, color = LIGHT_GRAY,batch=nave)
+        self.capsula_nave1 = pyglet.shapes.Rectangle(x=self.centro[0]+5,y=self.centro[1]-10, width = 80, height = 22, color = DARK_GRAY,batch=nave)
+        self.capsula_nave2 = pyglet.shapes.Rectangle(x=self.centro[0]+47,y=self.centro[1]+39, width = 22, height = 22, color = DARK_GRAY,batch=nave)
+        self.capsula_nave3 = pyglet.shapes.Rectangle(x=self.centro[0]+47,y=self.centro[1]+61, width = 10, height = 15, color = DARK_GRAY,batch=nave)
+        self.capsula_nave4 = pyglet.shapes.Rectangle(x=self.centro[0]+69,y=self.centro[1]+61, width = 10, height = 15, color = DARK_GRAY,batch=nave)
+        self.capsula_nave5 = pyglet.shapes.Rectangle(x=self.centro[0]+54,y=self.centro[1]+60, width = 10, height = 15, color = DARK_GRAY,batch=nave)
+        self.capsula_nave11 = pyglet.shapes.Rectangle(x=self.centro[0]+6,y=self.centro[1]-8, width = 78, height = 20, color = LIGHT_GRAY,batch=nave)
+        self.capsula_nave21 = pyglet.shapes.Rectangle(x=self.centro[0]+48,y=self.centro[1]+40, width = 20, height = 20, color = LIGHT_GRAY,batch=nave)
+        self.capsula_nave6 = pyglet.shapes.Line(x=self.centro[0]+49,y=self.centro[1]+61,x2 =self.centro[0]+54,y2=self.centro[1]+74, width = 1, color = LIGHT_GRAY, batch=nave)
+        self.capsula_nave7 = pyglet.shapes.Line(x=self.centro[0]+54,y=self.centro[1]+74,x2 =self.centro[0]+62,y2=self.centro[1]+74, width = 1, color = LIGHT_GRAY, batch=nave)
+        self.capsula_nave8 = pyglet.shapes.Line(x=self.centro[0]+62,y=self.centro[1]+74,x2 =self.centro[0]+67,y2=self.centro[1]+61, width = 1, color = LIGHT_GRAY, batch=nave)
+        self.capsula_nave9 = pyglet.shapes.Line(x=self.centro[0]+49,y=self.centro[1]+62,x2 =self.centro[0]+67,y2=self.centro[1]+62, width = 1, color = LIGHT_GRAY, batch=nave)
+        self.capsula_nave10 = pyglet.shapes.Line(x=self.centro[0]+55,y=self.centro[1]+62,x2 = self.centro[0]+55,y2=self.centro[1]+74, width = 1, color = LIGHT_GRAY, batch=nave)
+        self.capsula_nave12 = pyglet.shapes.Line(x=self.centro[0]+62,y=self.centro[1]+62,x2 = self.centro[0]+62,y2=self.centro[1]+74, width = 1, color = LIGHT_GRAY, batch=nave)
+        self.cuerpo_nave6 = pyglet.shapes.Line(x=self.centro[0],y=self.centro[1],x2=self.centro[0]-47,y2=self.centro[1]-47,width=2,color=DARK_GRAY,batch=nave)
+        self.cuerpo_nave7 = pyglet.shapes.Line(x=self.centro[0],y=self.centro[1],x2=self.centro[0]+48,y2=self.centro[1]-48,width=2,color=DARK_GRAY,batch=nave)
+        self.cuerpo_nave4 = pyglet.shapes.Circle(x=self.centro[0],y=self.centro[1], radius = 18, color = DARK_GRAY, batch = nave)
+        self.cuerpo_nave5 = pyglet.shapes.Circle(x=self.centro[0],y=self.centro[1], radius = 16, color = LIGHT_GRAY, batch = nave)
+        self.detalle_nave1 = pyglet.shapes.Circle(x=self.centro[0]-14,y=self.centro[1]-27, radius = 5, color = DARK_GRAY, batch = nave)
+        self.detalle_nave2 = pyglet.shapes.Circle(x=self.centro[0],y=self.centro[1]-29, radius = 5, color = DARK_GRAY, batch = nave)
+        self.detalle_nave3 = pyglet.shapes.Circle(x=self.centro[0]+13,y=self.centro[1]-27, radius = 5, color = DARK_GRAY, batch = nave)
+        self.detalle_nave4 = pyglet.shapes.Circle(x=self.centro[0]-20,y=self.centro[1]-40, radius = 5, color = DARK_GRAY, batch = nave)
+        self.detalle_nave5 = pyglet.shapes.Circle(x=self.centro[0],y=self.centro[1]-43, radius = 5, color = DARK_GRAY, batch = nave)
+        self.detalle_nave6 = pyglet.shapes.Circle(x=self.centro[0]+19,y=self.centro[1]-40, radius = 5, color = DARK_GRAY, batch = nave)
+        self.detalle_nave7 = pyglet.shapes.Triangle(x=self.centro[0]-30,y=self.centro[1]+20,x2=self.centro[0]-26,y2=self.centro[1]+35,x3=self.centro[0]-47,y3=self.centro[1]+20, color = DARK_GRAY, batch = nave)
+        self.detalle_nave8 = pyglet.shapes.Line(x=self.centro[0]-32,y=self.centro[1]+22,x2=self.centro[0]-40,y2=self.centro[1]+33,width=2, color = DARK_GRAY, batch = nave)
         self.capsula_nave1.rotation, self.capsula_nave11.rotation = -37,-37
         self.capsula_nave3.rotation=20
         self.capsula_nave4.anchor_x = 10
@@ -207,13 +210,28 @@ class estrella():
 
 
 # LLAMADO DE OBJETOS
-Lider = halcon()
-Wing1 = x_wing((WIDTH//2-150,HEIGHT//2-250))
-Wing2 = y_wing((WIDTH//2+150,HEIGHT//2-260))
+Lider = halcon((WIDTH//2,2*HEIGHT//5))
+Wing1 = x_wing((WIDTH//2-150,2*HEIGHT//5-150))
+Wing2 = y_wing((WIDTH//2+150,2*HEIGHT//5-160))
 
 for info in estrellas_i:
     if info[2]!=0:
         estrellas.append(estrella(info[0],info[1],info[2]))
+
+
+# ENTRAR PANTALLA COMPLETA
+@window.event
+def on_key_press(symbol,modifier):
+    global fullscreen
+    if symbol == pyglet.window.key.ENTER:
+        if fullscreen:
+            fullscreen = False
+            window.set_fullscreen(not window._fullscreen)
+        else:
+            fullscreen = True
+            window.set_fullscreen(not window._fullscreen)
+
+
 
 i=0
 n=1
@@ -240,7 +258,7 @@ def on_draw():
     for item in estrellas:
         if item.cuerpo0.y < -10:
             estrellas.remove(item)
-            estrellas.append(estrella(np.random.randint(10,1190),1010,np.random.randint(1,3)))
+            estrellas.append(estrella(np.random.randint(10,WIDTH-10),HEIGHT+10,np.random.randint(1,3)))
     # MOVER ESTRELLAS
     for item in estrellas:
         item.update()
