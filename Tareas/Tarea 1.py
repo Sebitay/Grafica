@@ -11,8 +11,8 @@ BLACK =(0,0,0)
 AMARILLO = (255,255,155)
 
 
-window = pyglet.window.Window(WIDTH,HEIGHT)
-n_estrellas = WIDTH*HEIGHT//15000
+window = pyglet.window.Window(1500,844,resizable = True)
+n_estrellas = window.height*window.width//15000
 nave = pyglet.graphics.Batch()
 star = pyglet.graphics.Batch()
 fullscreen = False
@@ -35,7 +35,7 @@ while i < n_estrellas:
     else:
         y1=3*HEIGHT//4
         y2=HEIGHT
-    estrellas_i[i] = np.array([np.random.randint(10,WIDTH-10),np.random.randint(y1,y2),np.random.randint(1,3)])
+    estrellas_i[i] = np.array([np.random.randint(10,window.width-10),np.random.randint(y1,y2),np.random.randint(1,3)])
     i+=1
 
 
@@ -191,7 +191,7 @@ class estrella():
         self.speed = 1.44
         if distancia >=2:
             color = (250,250,200)
-            self.speed = 1.2
+            self.speed = 1
             self.width = 1
         self.cuerpo0 = shapes.Line(x=pos_x-10/distancia,y=pos_y,x2=pos_x+10/distancia,y2=pos_y,width = self.width,color = color,batch = star)
         self.cuerpo1 = shapes.Line(x=pos_x,y=pos_y-10/distancia,x2=pos_x,y2=pos_y+10/distancia,width = self.width,color = color,batch = star)
@@ -210,9 +210,9 @@ class estrella():
 
 
 # LLAMADO DE OBJETOS
-Lider = halcon((WIDTH//2,2*HEIGHT//5))
-Wing1 = x_wing((WIDTH//2-150,2*HEIGHT//5-150))
-Wing2 = y_wing((WIDTH//2+150,2*HEIGHT//5-160))
+Lider = halcon((window.width//2,2*window.height//5))
+Wing1 = x_wing((window.width//2-150,2*window.height//5-150))
+Wing2 = y_wing((window.width//2+150,2*window.height//5-160))
 
 for info in estrellas_i:
     if info[2]!=0:
@@ -258,11 +258,11 @@ def on_draw():
     for item in estrellas:
         if item.cuerpo0.y < -10:
             estrellas.remove(item)
-            estrellas.append(estrella(np.random.randint(10,WIDTH-10),HEIGHT+10,np.random.randint(1,3)))
+            estrellas.append(estrella(np.random.randint(10,window.width-10),window.height+10,np.random.randint(1,3)))
     # MOVER ESTRELLAS
     for item in estrellas:
         item.update()
     star.draw()
     nave.draw()
     i+=1
-pyglet.app.run()
+pyglet.app.run(1/60)
