@@ -135,7 +135,6 @@ def read_OBJ(filename, color):
 
         # Per previous construction, each face is a triangle
         for face in faces:
-
             # Checking each of the triangle vertices
             for i in range(0, 3):
                 vertex = vertices[face[i][0]-1]

@@ -46,30 +46,31 @@ class SimpleModelViewProjectionShaderProgram:
 
         vertex_shader = """
             #version 330
-            
-            uniform mat4 projection;
-            uniform mat4 view;
-            uniform mat4 model;
-
             in vec3 position;
             in vec3 color;
+            in vec3 normal;
+            flat out vec4 vertexColor;
+            uniform mat4 model;
+            uniform mat4 view;
+            uniform mat4 projection;
 
-            out vec3 newColor;
             void main()
             {
-                gl_Position = projection * view * model * vec4(position, 1.0f);
-                newColor = color;
+                vec3 vertexPos = vec3(model * vec4(position, 1.0));
+                gl_Position = projection * view * vec4(vertexPos, 1.0);
+                vertexColor = vec4(color, 1.0);
+
+                vec3 normals = normal; // No hace nada
             }
             """
 
         fragment_shader = """
             #version 330
-            in vec3 newColor;
-
-            out vec4 outColor;
+            flat in vec4 vertexColor;
+            out vec4 fragColor;
             void main()
             {
-                outColor = vec4(newColor, 1.0f);
+                fragColor = vertexColor;
             }
             """
 
@@ -100,8 +101,9 @@ class SimpleModelViewProjectionShaderProgram:
         glEnableVertexAttribArray(color)
 
         normal = glGetAttribLocation(self.shaderProgram, "normal")
-        glVertexAttribPointer(normal, 3, GL_FLOAT, GL_FALSE, 36, ctypes.c_void_p(24))
-        glEnableVertexAttribArray(normal)
+        if normal >= 0:
+            glVertexAttribPointer(normal, 3, GL_FLOAT, GL_FALSE, 36, ctypes.c_void_p(24))
+            glEnableVertexAttribArray(normal)
 
         # Unbinding current vao
         glBindVertexArray(0)
@@ -182,8 +184,9 @@ class SimpleTextureModelViewProjectionShaderProgram:
         glEnableVertexAttribArray(color)
 
         normal = glGetAttribLocation(self.shaderProgram, "normal")
-        glVertexAttribPointer(normal, 3, GL_FLOAT, GL_FALSE, 32, ctypes.c_void_p(20))
-        glEnableVertexAttribArray(normal)
+        if normal >= 0:
+            glVertexAttribPointer(normal, 3, GL_FLOAT, GL_FALSE, 32, ctypes.c_void_p(20))
+            glEnableVertexAttribArray(normal)
 
         # Unbinding current vao
         glBindVertexArray(0)

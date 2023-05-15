@@ -100,7 +100,7 @@ def readOFF(filename, color):
             index += 3        
 
 
-        return Shape(vertexDataF, indices)
+        return _Shape(vertexDataF, indices)
 
 def read_OBJ(filename, color):
 
@@ -134,8 +134,10 @@ def read_OBJ(filename, color):
         index = 0
 
         # Per previous construction, each face is a triangle
+        c = 500
         for face in faces:
-
+            color =[c/2500,c/2500,c/2500]
+            c+=1
             # Checking each of the triangle vertices
             for i in range(0, 3):
                 vertex = vertices[face[i][0]-1]
@@ -150,11 +152,10 @@ def read_OBJ(filename, color):
             # Connecting the 3 vertices to create a triangle
             indices += [index, index + 1, index + 2]
             index += 3
-
     return _Shape(vertex_data, indices)
 
 
-def read_OBJ2(filename):
+def read_OBJ2(filename, color):
 
     vertices = []
     normals = []
@@ -187,21 +188,18 @@ def read_OBJ2(filename):
 
         # Per previous construction, each face is a triangle
         for face in faces:
-
             # Checking each of the triangle vertices
             for i in range(0, 3):
                 vertex = vertices[face[i][0]-1]
-                texture = tex_coords[face[i][1]-1]
                 normal = normals[face[i][2]-1]
 
                 vertex_data += [
                     vertex[0], vertex[1], vertex[2],
-                    texture[0], texture[1],
+                    color[0], color[1], color[2],
                     normal[0], normal[1], normal[2]
                 ]
 
             # Connecting the 3 vertices to create a triangle
             indices += [index, index + 1, index + 2]
             index += 3
-
     return _Shape(vertex_data, indices)
