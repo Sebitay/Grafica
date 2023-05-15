@@ -1,0 +1,12 @@
+Cosas a tener en cuenta para el código de Bastián Corrales:
+
+-Usé el archivo de ejercicio_minecraft que fue entregado en el auxiliar para hacer la base de todo
+-No hice 3 modelos de casas, solo pude hacer 2, ya que me costó mucho tiempo hacer el de minecraft, así que me falta eso
+-También el modelo de la casa de minecraft al estar hecho de muchos bloques y partes (la gracia para que se vea de minecraft)
+ se laguea demasiado (no corre) si pongo la mitad de las casas de minecraft, así que solo puse 1, si se ponen más igual se laguea
+ demasiado, pero hablando con un auxiliar me dijo que pusiera uno y listo, igual dejé una opción para el barrio más chico de que se 
+ pusieran random, pero es opcional (es para que vean que sé hacer cosas random)
+-con la O se sube y con la L se baja, con AWSD se mueve la cámara y con UP, DONW,LEFT,RIGHT el personaje se mueve
+- No pude hacer la cámara estática, me faltó tiempo :c
+-todo lo demás está correcto según la tarea, la verdad me costó muucho tiempo hacer todo lo que se ve y encuentro que es bastante dificil
+ y con mucho tiempo que gastar

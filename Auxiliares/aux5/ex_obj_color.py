@@ -8,6 +8,8 @@ import numpy as np
 
 import libs.shaders as sh
 import libs.transformations as tr
+import libs.easy_shaders as es
+
 
 from libs.gpu_shape import createGPUShape
 from libs.obj_handler import read_OBJ
@@ -43,7 +45,7 @@ ASSETS = {
 
 class Controller(pyglet.window.Window):
 
-    def __init__(self, width, height, title=f"Pochita :3"):
+    def __init__(self, width, height, title=f"pochita :3"):
         super().__init__(width, height, title)
         self.total_time = 0.0
         self.pipeline = sh.SimpleModelViewProjectionShaderProgram()
@@ -57,7 +59,7 @@ class Controller(pyglet.window.Window):
 class Camera:
 
     def __init__(self, at=np.array([0.0, 0.0, 0.0]), eye=np.array([1.0, 1.0, 1.0]), up=np.array([0.0, 0.0, 1.0])) -> None:
-        # View parameters
+        # View parameter
         self.at = at
         self.eye = eye
         self.up = up
