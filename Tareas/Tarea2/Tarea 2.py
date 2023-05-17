@@ -31,7 +31,7 @@ WIDTH, HEIGHT = 1600, 1000
 
 class Controller(pyglet.window.Window):
 
-    def __init__(self, width, height, title=f"nave :3"):
+    def __init__(self, width, height, title=f"Tarea 2"):
         super().__init__(width, height, title)
         self.total_time = 0.0
         self.gpuSombra = gs.createGPUShape(pipeline,read_OBJ2(ASSETS["sombra_obj"], (0.3,0.3,0.3)))
@@ -46,13 +46,16 @@ class Controller(pyglet.window.Window):
         self.pos = [0,0,0]
         self.rotation = 0
         self.rotationSpeed = 0
+        self.upward = 0
+        self.zrotation = 0
 
     def update(self):
         self.rotation += self.rotationSpeed
-        self.pos[0] += self.advance*np.cos(self.rotation)
-        self.pos[2] -= self.advance*np.sin(self.rotation)
-        self.nave.transform = tr.matmul([tr.translate(self.pos[0],self.pos[1],self.pos[2]),tr.rotationY(self.rotation)])
-        self.sombra.transform = tr.matmul([tr.translate(self.pos[0],self.pos[1]-29.9,self.pos[2]),tr.scale(5,0,5)])
+        self.pos[1] += self.advance*np.sin(self.zrotation)
+        self.pos[0] += self.advance*np.cos(self.rotation)*np.cos(self.zrotation)
+        self.pos[2] -= self.advance*np.sin(self.rotation)*np.cos(self.zrotation)
+        self.nave.transform = tr.matmul([tr.matmul([tr.translate(self.pos[0],self.pos[1],self.pos[2]),tr.rotationY(self.rotation)]),tr.rotationZ(self.zrotation)])
+        self.sombra.transform = tr.matmul([tr.translate(self.pos[0],-29.9,self.pos[2]),tr.scale(5,0,5)])
 
 class Camera:
 
@@ -67,14 +70,17 @@ class Camera:
         self.rotate = 0
         self.rotation = 0
         self.elevate = 0
+        self.zrotation = 0
 
 
     def update(self):
         self.rotation +=self.rotate
-        self.at[0] += np.cos(self.rotation)*self.advance
-        self.at[2] -= np.sin(self.rotation)*self.advance
-        self.eye[0] += np.cos(self.rotation)*self.advance
-        self.eye[2] -= np.sin(self.rotation)*self.advance
+        self.at[1] +=np.sin(self.zrotation)*self.advance
+        self.at[0] += np.cos(self.rotation)*self.advance*np.cos(self.zrotation)
+        self.at[2] -= np.sin(self.rotation)*self.advance*np.cos(self.zrotation)
+        self.eye[1] +=np.sin(self.zrotation)*self.advance
+        self.eye[0] += np.cos(self.rotation)*self.advance*np.cos(self.zrotation)
+        self.eye[2] -= np.sin(self.rotation)*self.advance*np.cos(self.zrotation)
 
 
 
@@ -231,6 +237,21 @@ def on_key_release(symbol, modifiers):
     elif symbol == pyglet.window.key.D:
         camera.rotate += 0.1
         controller.rotationSpeed += 0.1
+
+
+@controller.event
+def on_mouse_drag(x,y,dx,dy,buttons,modifiers):
+    if pyglet.window.mouse.LEFT:
+        controller.zrotation += 0.01*dy
+        camera.zrotation += 0.01*dy
+
+@controller.event
+def on_mouse_release(x, y, button, modifiers):
+    if button == pyglet.window.mouse.LEFT:
+        #controller.zrotation = 0
+        #camera.zrotation = 0 
+        pass
+        
 
 @controller.event
 def on_draw():
